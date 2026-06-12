@@ -1,0 +1,55 @@
+{
+  "slug": "replace-me",
+  "displayName": "Replace Me",
+  "aliases": [],
+  "identity": {
+    "mcmod": null,
+    "modrinth": null,
+    "github": null,
+    "curseforge": null
+  },
+  "releaseSources": [
+    {
+      "platform": "modrinth",
+      "status": "official",
+      "url": null
+    }
+  ],
+  "support": {
+    "minecraftVersions": [],
+    "loaders": [],
+    "clientRequirement": "unknown",
+    "serverRequirement": "unknown"
+  },
+  "dependencies": {
+    "required": [],
+    "optional": [],
+    "incompatible": []
+  },
+  "configuration": {
+    "entryPoints": [],
+    "commands": [],
+    "permissions": [],
+    "dataDrivenSurfaces": []
+  },
+  "behaviorSurfaces": {
+    "worldgen": [],
+    "items": [],
+    "entities": [],
+    "progression": [],
+    "automation": [],
+    "economy": []
+  },
+  "risks": {
+    "versionRisk": "unknown",
+    "worldgenRisk": "unknown",
+    "progressionRisk": "unknown",
+    "operationalRisk": "unknown"
+  },
+  "recommendation": {
+    "status": "unknown",
+    "summary": "",
+    "nextChecks": []
+  },
+  "evidence": []
+}

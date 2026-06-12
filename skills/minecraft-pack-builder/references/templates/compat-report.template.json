@@ -1,0 +1,22 @@
+{
+  "id": "replace-me",
+  "scope": {
+    "mods": [],
+    "projectContext": "references\\project-context.json"
+  },
+  "decision": "hold",
+  "summary": "",
+  "checks": {
+    "loaderAlignment": "unknown",
+    "versionAlignment": "unknown",
+    "serverSuitability": "unknown",
+    "dependencyBurden": "unknown",
+    "overlapRisk": "unknown",
+    "balanceRisk": "unknown",
+    "operationalRisk": "unknown"
+  },
+  "conditions": [],
+  "requiredAdaptations": [],
+  "blockingIssues": [],
+  "evidence": []
+}
