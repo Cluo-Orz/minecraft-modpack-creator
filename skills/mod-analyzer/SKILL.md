@@ -7,6 +7,12 @@ Analyze one mod deeply enough that the modpack can make an informed decision abo
 
 ---
 
+## Required pack state
+
+If `pack-state\project-context.json` does not exist, use the `pack-context` skill to bootstrap `pack-state` before writing a mod analysis. Do not make adoption recommendations against an absent or imaginary pack context.
+
+---
+
 ## Input expectation
 
 Work from at least one of these:

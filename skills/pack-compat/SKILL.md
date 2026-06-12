@@ -7,6 +7,12 @@ Decide whether a mod is reasonable for the current pack, not whether it looks in
 
 ---
 
+## Required pack state
+
+If `pack-state\project-context.json` does not exist, use the `pack-context` skill to bootstrap `pack-state` before evaluating compatibility. Compatibility is relative to a real pack context; do not classify fit against an absent or imaginary pack.
+
+---
+
 ## Required context
 
 Read:

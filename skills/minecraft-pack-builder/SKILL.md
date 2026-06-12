@@ -7,15 +7,16 @@ Build and evolve the modpack as a long-running lifecycle, not a one-off recommen
 
 This skill owns the loop:
 
-1. Read the current pack state
-2. Understand the new requirement
-3. Find candidate mods
-4. Present a shortlist for user selection
-5. Analyze the chosen mods
-6. Evaluate pack fit and risks
-7. Download or resolve the official acquisition path
-8. Generate integration documentation
-9. Update references so the next request starts from current reality
+1. Bootstrap `pack-state` with `pack-context` if it does not exist
+2. Read the current pack state
+3. Understand the new requirement
+4. Find candidate mods
+5. Present a shortlist for user selection
+6. Analyze the chosen mods
+7. Evaluate pack fit and risks
+8. Download or resolve the official acquisition path
+9. Generate integration documentation
+10. Update references so the next request starts from current reality
 
 ---
 
@@ -33,13 +34,13 @@ When another project skill needs one of these resources, refer to it as the `min
 
 ## Core references
 
-Always ground your work in these files first:
+Always ground your work in these files first. If they do not exist yet, use the `pack-context` skill to create them from the user's new-pack brief or from the existing modpack workspace before doing discovery.
 
 - `pack-state\project-context.json`
 - `pack-state\mod-analyses\*.json`
 - `pack-state\compat-reports\*.json`
 
-If the pack state is unclear, use the `pack-context` skill before doing discovery.
+If the pack state is missing or unclear, use the `pack-context` skill before doing discovery.
 
 If a mod has already been analyzed, reuse that analysis instead of starting from scratch.
 

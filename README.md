@@ -41,7 +41,7 @@ Shared scripts and templates are owned by the `minecraft-pack-builder` skill. Ot
 
 ## Project State
 
-Add a `pack-state` directory to the modpack workspace:
+The skills create and maintain a `pack-state` directory inside the modpack workspace:
 
 ```text
 pack-state/
@@ -51,7 +51,7 @@ pack-state/
   integration-docs/
 ```
 
-A minimal `project-context.json` can start like this:
+When `pack-state` is missing, `pack-context` bootstraps it automatically. A minimal `project-context.json` starts like this:
 
 ```json
 {
@@ -74,7 +74,7 @@ A minimal `project-context.json` can start like this:
 }
 ```
 
-Commit `pack-state` to Git. It is the long-term memory of the pack.
+Commit the generated `pack-state` directory to Git. It is the long-term memory of the pack.
 
 ## Start a New Modpack
 
@@ -84,12 +84,11 @@ Create a clean workspace:
 my-modpack/
   mods/
   config/
-  pack-state/
 ```
 
 Then make this repository's `skills/` available to your agent. Depending on your environment, that can mean installing the folders into the agent's skills directory or keeping this repository open as a workspace that supports local skills.
 
-After creating `pack-state/project-context.json`, give the agent a clear target:
+Give the agent a clear target. It should create `pack-state` itself if the directory is missing:
 
 ```text
 Use the minecraft-pack-builder skill.
@@ -103,11 +102,12 @@ Help me clarify the requirements, propose the first candidate mods, and update p
 Recommended loop:
 
 1. Describe the gameplay goal and hard constraints.
-2. Let `minecraft-pack-builder` propose candidates.
-3. Choose one or more candidate mods.
-4. Let `mod-analyzer` write per-mod analysis artifacts.
-5. Let `pack-compat` classify fit, blockers, and conditions.
-6. Let `pack-context` update durable project state.
+2. Let `pack-context` initialize `pack-state`.
+3. Let `minecraft-pack-builder` propose candidates.
+4. Choose one or more candidate mods.
+5. Let `mod-analyzer` write per-mod analysis artifacts.
+6. Let `pack-compat` classify fit, blockers, and conditions.
+7. Let `pack-context` update durable project state.
 
 A good session ends with updated files, not just advice.
 
@@ -115,17 +115,7 @@ A good session ends with updated files, not just advice.
 
 You do not need to rebuild an existing pack around these skills. Add a state layer and let the agent learn the current project shape.
 
-First, make `skills/` available to the agent and create:
-
-```text
-pack-state/
-  project-context.json
-  mod-analyses/
-  compat-reports/
-  integration-docs/
-```
-
-Then ask the agent to bootstrap context from the existing files:
+First, make `skills/` available to the agent. Then ask it to bootstrap `pack-state` from the existing files:
 
 ```text
 Use the pack-context skill.
@@ -194,4 +184,3 @@ skills/
 - Keep accepted decisions, candidate ideas, and hypotheses separate.
 - Reuse existing analysis instead of starting from scratch.
 - Leave the project easier to continue than you found it.
-

@@ -41,7 +41,7 @@
 
 ## 核心状态目录
 
-在你的整合包工作区里保留一个 `pack-state` 目录：
+这些 skill 会在整合包工作区里创建并维护 `pack-state` 目录：
 
 ```text
 pack-state/
@@ -51,7 +51,7 @@ pack-state/
   integration-docs/
 ```
 
-最小的 `project-context.json` 可以这样开始：
+当 `pack-state` 不存在时，`pack-context` 会自动初始化它。最小的 `project-context.json` 长这样：
 
 ```json
 {
@@ -74,7 +74,7 @@ pack-state/
 }
 ```
 
-建议把 `pack-state` 提交到 Git。它就是这个整合包的长期记忆。
+建议把生成出来的 `pack-state` 提交到 Git。它就是这个整合包的长期记忆。
 
 ## 从 0 开始开发一个整合包
 
@@ -84,12 +84,11 @@ pack-state/
 my-modpack/
   mods/
   config/
-  pack-state/
 ```
 
 然后把本仓库的 `skills/` 提供给你的 agent。具体方式取决于你的环境：可以安装到 agent 的 skills 目录，也可以在支持仓库级 skills 的环境中直接把本仓库作为工作区。
 
-准备好 `pack-state/project-context.json` 后，直接给 agent 一个明确目标：
+直接给 agent 一个明确目标。`pack-state` 不存在时，agent 应该自己创建：
 
 ```text
 Use the minecraft-pack-builder skill.
@@ -103,11 +102,12 @@ Use the minecraft-pack-builder skill.
 推荐的迭代节奏：
 
 1. 描述玩法目标和硬约束。
-2. 让 `minecraft-pack-builder` 给出候选列表。
-3. 选择候选 Mod。
-4. 让 `mod-analyzer` 写入单 Mod 分析。
-5. 让 `pack-compat` 判断是否适合当前包。
-6. 让 `pack-context` 更新长期项目状态。
+2. 让 `pack-context` 初始化 `pack-state`。
+3. 让 `minecraft-pack-builder` 给出候选列表。
+4. 选择候选 Mod。
+5. 让 `mod-analyzer` 写入单 Mod 分析。
+6. 让 `pack-compat` 判断是否适合当前包。
+7. 让 `pack-context` 更新长期项目状态。
 
 一次好的工作流结束时，仓库里应该多出或更新了状态文件，而不只是得到一段建议。
 
@@ -115,17 +115,7 @@ Use the minecraft-pack-builder skill.
 
 已有整合包不需要重做。你只需要给它补一个状态层。
 
-第一步，把 `skills/` 放到 agent 可用的位置，并在整合包仓库里创建：
-
-```text
-pack-state/
-  project-context.json
-  mod-analyses/
-  compat-reports/
-  integration-docs/
-```
-
-第二步，让 agent 从现有文件建立上下文：
+第一步，把 `skills/` 放到 agent 可用的位置。然后让 agent 根据现有文件自动构建 `pack-state`：
 
 ```text
 Use the pack-context skill.
@@ -135,7 +125,7 @@ Use the pack-context skill.
 请区分已确认事实和推测，不要编造版本目标或设计目标。
 ```
 
-第三步，逐步回填关键 Mod 的分析：
+第二步，逐步回填关键 Mod 的分析：
 
 ```text
 Use the mod-analyzer skill.
@@ -195,4 +185,3 @@ skills/
 - 把已接受决策、候选想法和推测分开。
 - 复用已有分析，不重复从零开始。
 - 每次工作结束，都让项目比开始时更容易继续。
-

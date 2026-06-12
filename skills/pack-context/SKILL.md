@@ -1,11 +1,67 @@
 ---
 name: pack-context
-description: Summarize and maintain the evolving modpack project state. Use whenever work needs the latest pack profile, selected or rejected mods, constraints, prior analyses, compatibility reports, integration history, or updates to durable pack-state references.
+description: Bootstrap, summarize, and maintain the evolving Minecraft modpack project state. Use whenever work needs a new or existing pack-state directory, the latest pack profile, selected or rejected mods, constraints, prior analyses, compatibility reports, integration history, or updates to durable pack-state references.
 ---
 
 Treat the modpack as an evolving project state.
 
-Your job is to read the durable references, synthesize the current picture, and keep the project context file aligned with accepted decisions.
+Your job is to create the durable state layer when it is missing, read existing references when they exist, synthesize the current picture, and keep the project context file aligned with accepted decisions.
+
+---
+
+## Bootstrap behavior
+
+If `pack-state\project-context.json` does not exist, create the state layer before summarizing:
+
+- `pack-state\project-context.json`
+- `pack-state\mod-analyses\`
+- `pack-state\compat-reports\`
+- `pack-state\integration-docs\`
+
+If `project-context.json` exists but one of the sibling artifact directories is missing, create the missing directory before continuing.
+
+For a new pack, initialize `project-context.json` from the user's stated goals and constraints. Leave unknown fields as `null` or empty arrays instead of guessing.
+
+For an existing pack, inspect the workspace first and derive confirmed facts from available files such as:
+
+- `mods\`
+- `config\`
+- `defaultconfigs\`
+- `kubejs\`
+- `datapacks\`
+- `manifest.json`
+- `modrinth.index.json`
+- `pack.toml` or packwiz files
+- existing README, changelog, or notes
+
+Separate confirmed facts from hypotheses. If a version, loader, pack goal, or mod role cannot be proven from files or user input, mark it as unknown rather than inventing it.
+
+Use this minimal shape for a new `project-context.json`:
+
+```json
+{
+  "packName": null,
+  "minecraftVersion": null,
+  "loader": null,
+  "distribution": null,
+  "goals": [],
+  "hardConstraints": [],
+  "acceptedMods": [],
+  "rejectedMods": [],
+  "pendingMods": [],
+  "openCapabilityGaps": [],
+  "knownRisks": [],
+  "artifacts": {
+    "modAnalyses": [],
+    "compatReports": [],
+    "integrationDocs": []
+  },
+  "evidence": [],
+  "hypotheses": []
+}
+```
+
+After bootstrapping, continue with the normal read order.
 
 ---
 
