@@ -1,45 +1,47 @@
 # Minecraft Modpack Creator Skills
 
-用 Agent Skills 把 Minecraft 整合包开发变成一套可复用、可追踪、可继续协作的工作流。
+[English](./README.md) | [简体中文](./README.zh-CN.md)
 
-这个仓库不是启动器，也不是下载器。它是一组给 AI agent 使用的 skill：让 agent 在开发整合包时记住项目目标、验证 Mod 来源、分析兼容风险、沉淀决策记录，并在下一次对话里继续基于同一份项目状态工作。
+An Agent Skills workflow for building Minecraft modpacks with durable context, source-backed decisions, and repeatable integration reviews.
 
-适合：
+This repository is not a launcher, downloader, or mod manager. It is a skill set for AI agents that helps turn modpack development from ad hoc chat into a maintainable project workflow.
 
-- 从 0 开始规划一个新的 NeoForge / Minecraft 整合包
-- 给已有整合包补上“项目状态”和“决策记录”
-- 评估候选 Mod 是否真的适合当前包
-- 让 AI 不再每次都从一份临时聊天记录重新开始
+Use it when you want an agent to:
 
-## 为什么需要它
+- Plan a new NeoForge / Minecraft modpack from zero.
+- Add project memory to an existing modpack.
+- Evaluate whether a candidate mod actually fits the current pack.
+- Keep accepted decisions, rejected ideas, compatibility reports, and integration notes in files.
 
-整合包开发最难的部分通常不是“找 Mod”，而是回答这些问题：
+## Why It Exists
 
-- 这个包到底要解决什么体验？
-- 当前目标版本、Loader、服务端/客户端约束是什么？
-- 哪些 Mod 已经接受，哪些被拒绝，为什么？
-- 新 Mod 会不会和已有世界生成、进度、权限、指令、配置冲突？
-- 下载来源是不是官方的，证据在哪里？
-- 下一次继续开发时，AI 应该从哪里接上？
+The hard part of modpack development is rarely "find a mod." The hard part is keeping the reasoning clear:
 
-这个仓库把这些信息写进 `pack-state`，让整合包开发从“聊天建议”变成“可维护工程”。
+- What experience is this pack trying to create?
+- Which Minecraft version, loader, and server/client constraints matter?
+- Which mods are accepted, rejected, or still pending?
+- Does a new mod overlap with worldgen, progression, permissions, commands, config, or balance?
+- Is the download source official, and where is the evidence?
+- Where should the next AI session continue from?
 
-## 包含的 Skills
+These skills write that context into `pack-state`, so future work can continue from project state instead of a temporary conversation.
 
-每个 skill 都是一个独立目录，核心文件是 `SKILL.md`。
+## Skills
 
-| Skill | 作用 |
+Each skill is a self-contained folder with a `SKILL.md` file.
+
+| Skill | Purpose |
 | --- | --- |
-| `minecraft-pack-builder` | 主流程编排：理解需求、发现候选 Mod、生成 shortlist、调用分析与兼容评估、更新项目状态。 |
-| `mod-analyzer` | 深入分析单个 Mod：来源、别名、版本/Loader、依赖、配置面、实现线索和风险。 |
-| `pack-compat` | 判断一个或多个 Mod 是否适合当前整合包，并记录阻塞项、重叠能力和接入条件。 |
-| `pack-context` | 维护当前整合包上下文：目标、约束、已选/已拒 Mod、历史分析和风险。 |
+| `minecraft-pack-builder` | Orchestrates the full workflow: requirement intake, candidate discovery, shortlist, analysis, compatibility review, source resolution, and state updates. |
+| `mod-analyzer` | Analyzes one mod in depth: source validity, aliases, version / loader support, dependencies, configuration surface, implementation signals, and risks. |
+| `pack-compat` | Decides whether one or more analyzed mods fit the current pack and records blockers, overlaps, and adoption conditions. |
+| `pack-context` | Maintains the current pack context: goals, constraints, accepted / rejected mods, prior analyses, compatibility reports, and known risks. |
 
-共享脚本和模板由 `minecraft-pack-builder` skill 持有，其他 skill 通过资源名引用，不依赖硬编码路径。
+Shared scripts and templates are owned by the `minecraft-pack-builder` skill. Other skills refer to those resources by skill and resource name, not by hard-coded repository paths.
 
-## 核心状态目录
+## Project State
 
-在你的整合包工作区里保留一个 `pack-state` 目录：
+Add a `pack-state` directory to the modpack workspace:
 
 ```text
 pack-state/
@@ -49,7 +51,7 @@ pack-state/
   integration-docs/
 ```
 
-最小的 `project-context.json` 可以这样开始：
+A minimal `project-context.json` can start like this:
 
 ```json
 {
@@ -72,11 +74,11 @@ pack-state/
 }
 ```
 
-建议把 `pack-state` 提交到 Git。它就是这个整合包的长期记忆。
+Commit `pack-state` to Git. It is the long-term memory of the pack.
 
-## 从 0 开始开发一个整合包
+## Start a New Modpack
 
-创建一个新的整合包工作区：
+Create a clean workspace:
 
 ```text
 my-modpack/
@@ -85,35 +87,35 @@ my-modpack/
   pack-state/
 ```
 
-然后把本仓库的 `skills/` 提供给你的 agent。具体方式取决于你的环境：可以安装到 agent 的 skills 目录，也可以在支持仓库级 skills 的环境中直接把本仓库作为工作区。
+Then make this repository's `skills/` available to your agent. Depending on your environment, that can mean installing the folders into the agent's skills directory or keeping this repository open as a workspace that supports local skills.
 
-准备好 `pack-state/project-context.json` 后，直接给 agent 一个明确目标：
+After creating `pack-state/project-context.json`, give the agent a clear target:
 
 ```text
 Use the minecraft-pack-builder skill.
 
-我要从 0 开始做一个 NeoForge 服务端优先的生存整合包。
-方向是探索、道路、城镇、轻量自动化和长期成长。
-尽量避免强客户端依赖，也不要引入会显著增加世界生成不稳定性的 Mod。
-请先帮我整理需求、给出第一批候选 Mod，并在决策稳定后更新 pack-state。
+I want to build a NeoForge server-first survival modpack from zero.
+The direction is exploration, roads, towns, light automation, and long-term progression.
+Avoid heavy client-only requirements and avoid mods that make worldgen significantly unstable.
+Help me clarify the requirements, propose the first candidate mods, and update pack-state once decisions become stable.
 ```
 
-推荐的迭代节奏：
+Recommended loop:
 
-1. 描述玩法目标和硬约束。
-2. 让 `minecraft-pack-builder` 给出候选列表。
-3. 选择候选 Mod。
-4. 让 `mod-analyzer` 写入单 Mod 分析。
-5. 让 `pack-compat` 判断是否适合当前包。
-6. 让 `pack-context` 更新长期项目状态。
+1. Describe the gameplay goal and hard constraints.
+2. Let `minecraft-pack-builder` propose candidates.
+3. Choose one or more candidate mods.
+4. Let `mod-analyzer` write per-mod analysis artifacts.
+5. Let `pack-compat` classify fit, blockers, and conditions.
+6. Let `pack-context` update durable project state.
 
-一次好的工作流结束时，仓库里应该多出或更新了状态文件，而不只是得到一段建议。
+A good session ends with updated files, not just advice.
 
-## 让已有整合包接入 Skills
+## Connect an Existing Modpack
 
-已有整合包不需要重做。你只需要给它补一个状态层。
+You do not need to rebuild an existing pack around these skills. Add a state layer and let the agent learn the current project shape.
 
-第一步，把 `skills/` 放到 agent 可用的位置，并在整合包仓库里创建：
+First, make `skills/` available to the agent and create:
 
 ```text
 pack-state/
@@ -123,54 +125,53 @@ pack-state/
   integration-docs/
 ```
 
-第二步，让 agent 从现有文件建立上下文：
+Then ask the agent to bootstrap context from the existing files:
 
 ```text
 Use the pack-context skill.
 
-这是一个已有 Minecraft 整合包。请扫描当前工作区，创建 pack-state/project-context.json。
-重点参考 mods/、config/、defaultconfigs/、kubejs/、datapacks/ 和已有说明文档。
-请区分已确认事实和推测，不要编造版本目标或设计目标。
+This is an existing Minecraft modpack. Inspect the current workspace and create pack-state/project-context.json.
+Use mods/, config/, defaultconfigs/, kubejs/, datapacks/, and any existing notes if present.
+Separate confirmed facts from guesses. Do not invent version targets or design goals.
 ```
 
-第三步，逐步回填关键 Mod 的分析：
+Backfill analysis for important mods gradually:
 
 ```text
 Use the mod-analyzer skill.
 
-请先分析这个包里最核心的世界生成、进度和服务端玩法 Mod。
-每个重要 Mod 写一个 mod-analyses 记录，然后用 pack-compat 找出重叠能力和风险。
+Analyze the most important worldgen, progression, and server gameplay mods in this pack.
+Create one mod-analyses artifact per important mod, then use pack-compat to identify overlaps and risks.
 ```
 
-以后每次加 Mod，都让 agent 先读 `pack-state`：
+For future changes, make the agent read `pack-state` first:
 
 ```text
 Use the minecraft-pack-builder skill.
 
-我想给这个已有整合包加入道路或交通系统。
-请先读取 pack-state，复用已有分析，提出候选 Mod。
-只有在官方来源和当前包适配性都清楚时，才给出推荐。
+I want to add a road or transportation system to this existing pack.
+Read pack-state first, reuse prior analyses, propose candidate mods, and only recommend a mod when the official source and pack fit are clear.
 ```
 
-## 工作流约定
+## Workflow Contract
 
-- `project-context.json` 是当前整合包的事实入口。
-- `mod-analyses/*.json` 记录单个 Mod 的来源、能力和风险。
-- `compat-reports/*.json` 记录适配结论、阻塞项和接入条件。
-- `integration-docs/*.md` 记录已选 Mod 的配置、部署和维护说明。
+- `project-context.json` is the current entry point for pack truth.
+- `mod-analyses/*.json` records individual mod sources, capabilities, and risks.
+- `compat-reports/*.json` records fit decisions, blockers, and adoption conditions.
+- `integration-docs/*.md` records configuration, deployment, and maintenance notes for accepted mods.
 
-如果一个决策以后还会影响整合包，就不要只把它留在聊天里。
+If a decision will matter later, keep it out of chat-only memory.
 
-## 这不是
+## What This Is Not
 
-- 不是 Mod 下载站
-- 不是自动化启动器
-- 不是依赖求解器
-- 不是替你决定所有玩法方向的黑箱
+- Not a mod download site.
+- Not a launcher.
+- Not a dependency solver.
+- Not a black box that decides the pack direction for you.
 
-它的职责是帮助你更稳地做判断，并把判断沉淀成项目资产。
+Its job is to help you make better decisions and preserve those decisions as project assets.
 
-## 仓库结构
+## Repository Layout
 
 ```text
 skills/
@@ -186,11 +187,11 @@ skills/
     SKILL.md
 ```
 
-## 原则
+## Principles
 
-- 优先使用官方或可信来源。
-- 优先写清取舍，而不是给出模糊的“应该没问题”。
-- 把已接受决策、候选想法和推测分开。
-- 复用已有分析，不重复从零开始。
-- 每次工作结束，都让项目比开始时更容易继续。
+- Prefer official or trusted sources.
+- Prefer explicit tradeoffs over vague "should be fine" conclusions.
+- Keep accepted decisions, candidate ideas, and hypotheses separate.
+- Reuse existing analysis instead of starting from scratch.
+- Leave the project easier to continue than you found it.
 
